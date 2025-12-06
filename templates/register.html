@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - VulnLogin Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="header">
+                <h1>📝 Crear Cuenta</h1>
+                <p class="subtitle">VulnLogin Lab</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <label for="username">👤 Usuario</label>
+                    <input type="text" id="username" name="username" 
+                           placeholder="Elige un nombre de usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">📧 Email</label>
+                    <input type="text" id="email" name="email" 
+                           placeholder="tu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">🔑 Contraseña</label>
+                    <input type="password" id="password" name="password" 
+                           placeholder="Mínimo 3 caracteres" required>
+                    <small class="warning-text">
+                        ⚠️ Sistema vulnerable: acepta contraseñas débiles
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Crear Cuenta
+                </button>
+            </form>
+
+            <div class="links">
+                <a href="{{ url_for('login') }}">¿Ya tienes cuenta? Inicia sesión</a>
+            </div>
+
+            <div class="info-box">
+                <h3>⚠️ Vulnerabilidad Activa</h3>
+                <p><strong>Weak Password Policy:</strong></p>
+                <ul>
+                    <li>✗ No requiere mayúsculas</li>
+                    <li>✗ No requiere números</li>
+                    <li>✗ No requiere caracteres especiales</li>
+                    <li>✗ Acepta contraseñas de 3 caracteres</li>
+                    <li>✗ No valida email real</li>
+                    <li>✗ Almacena contraseñas en texto plano</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

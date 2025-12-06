@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VulnLogin Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard">
+            <div class="header">
+                <h1>📊 Panel de Control</h1>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="user-info">
+                <h2>👤 Bienvenido, {{ user[1] }}!</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>ID:</strong> {{ user[0] }}
+                    </div>
+                    <div class="info-item">
+                        <strong>Usuario:</strong> {{ user[1] }}
+                    </div>
+                    <div class="info-item">
+                        <strong>Email:</strong> {{ user[3] }}
+                    </div>
+                    <div class="info-item">
+                        <strong>Rol:</strong> 
+                        <span class="badge {% if user[4] == 'admin' %}badge-admin{% else %}badge-user{% endif %}">
+                            {{ user[4] }}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Sesión ID:</strong> 
+                        <code>{{ session.get('user_id') }}</code>
+                    </div>
+                </div>
+            </div>
+
+            {% if session.get('role') == 'admin' %}
+            <div class="admin-panel">
+                <h2>🔐 Panel de Administrador</h2>
+                <p>Tienes acceso completo al sistema</p>
+                
+                <h3>Usuarios del Sistema:</h3>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in all_users %}
+                        <tr>
+                            <td>{{ u[0] }}</td>
+                            <td>{{ u[1] }}</td>
+                            <td>{{ u[2] }}</td>
+                            <td>
+                                <span class="badge {% if u[3] == 'admin' %}badge-admin{% else %}badge-user{% endif %}">
+                                    {{ u[3] }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <h3>⚙️ Acciones Disponibles</h3>
+                <div class="action-buttons">
+                    <a href="/users" class="btn btn-info" target="_blank">
+                        Ver Lista de Usuarios
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary">
+                        Crear Nuevo Usuario
+                    </a>
+                </div>
+            </div>
+
+            <div class="session-info">
+                <h3>🔍 Información de Sesión (Debug)</h3>
+                <p><strong>Cookie de sesión actual:</strong></p>
+                <code>{{ request.cookies.get('session') }}</code>
+                <p class="warning-text">
+                    ⚠️ En un sistema real, NUNCA mostrar información de sesión
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
